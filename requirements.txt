@@ -1,13 +1,8 @@
+txt
 Flask==2.3.3
 Flask-SQLAlchemy==3.0.5
 Flask-Login==0.6.3
 Flask-WTF==1.1.1
 WTForms==3.0.1
 Werkzeug==2.3.7
-psycopg2-binary==2.9.7
 python-dotenv==1.0.0
-gunicorn==21.2.0
-
-# Note: psycopg2-binary might fail on local Windows development
-# For local development only, you can comment out the psycopg2-binary line
-# SQLite will be used automatically for local development

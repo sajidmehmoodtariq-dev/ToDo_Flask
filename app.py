@@ -11,11 +11,14 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-here')
 # Database configuration
 # For Railway (production) or local development
 if os.environ.get('DATABASE_URL'):
-    # Railway PostgreSQL URL
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+    # Railway PostgreSQL URL - Handle postgres:// to postgresql:// conversion for Vercel
+    database_url = os.environ.get('DATABASE_URL')
+    if database_url.startswith('postgres://'):
+        database_url = database_url.replace('postgres://', 'postgresql://', 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 else:
     # Local SQLite for development
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todo.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///instance/todo.db'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -222,9 +225,45 @@ def profile():
     }
     return render_template('profile.html', user=current_user, stats=stats)
 
-# Create tables
-with app.app_context():
-    db.create_all()
+# Health check route for Vercel
+@app.route('/health')
+def health_check():
+    return jsonify({"status": "healthy", "timestamp": datetime.utcnow().isoformat()})
+
+# Route to initialize database tables (for production deployment)
+@app.route('/init-db')
+def init_db():
+    """Initialize database tables - call this once after deployment"""
+    try:
+        with app.app_context():
+            db.create_all()
+        return jsonify({"message": "Database tables created successfully!"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Error handlers for better production experience
+@app.errorhandler(404)
+def not_found(error):
+    return render_template('base.html', 
+                         title='Page Not Found',
+                         content='<h2>404 - Page Not Found</h2><p>The page you are looking for does not exist.</p>'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    db.session.rollback()
+    return render_template('base.html',
+                         title='Server Error', 
+                         content='<h2>500 - Internal Server Error</h2><p>Something went wrong on our end.</p>'), 500
+
+# Create tables only in development/local environment
+# Skip table creation in serverless environments like Vercel
+if not os.environ.get('DATABASE_URL') and not os.environ.get('VERCEL'):
+    with app.app_context():
+        db.create_all()
+
+# Vercel serverless function handler
+app = app
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Only run in debug mode for local development
+    app.run(debug=os.environ.get('FLASK_ENV') == 'development')
