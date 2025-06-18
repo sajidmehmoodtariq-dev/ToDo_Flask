@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Register - My Todo App{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header text-center">
+        <h2 class="mb-0">
+            <i class="fas fa-user-plus me-2"></i>
+            Create Account
+        </h2>
+        <p class="mb-0 mt-2 opacity-75">Join us and start organizing your todos</p>
+    </div>
+    <div class="card-body p-4">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="username" class="form-label">
+                    <i class="fas fa-user me-1"></i>
+                    Username
+                </label>
+                <input type="text" class="form-control" id="username" name="username" 
+                       placeholder="Choose a username" required>
+                <small class="form-text text-muted">Username must be unique</small>
+            </div>
+            
+            <div class="mb-3">
+                <label for="email" class="form-label">
+                    <i class="fas fa-envelope me-1"></i>
+                    Email Address
+                </label>
+                <input type="email" class="form-control" id="email" name="email" 
+                       placeholder="Enter your email" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="password" class="form-label">
+                    <i class="fas fa-lock me-1"></i>
+                    Password
+                </label>
+                <input type="password" class="form-control" id="password" name="password" 
+                       placeholder="Choose a secure password" required>
+                <small class="form-text text-muted">Minimum 6 characters</small>
+            </div>
+            
+            <div class="mb-4">
+                <label for="confirm_password" class="form-label">
+                    <i class="fas fa-lock me-1"></i>
+                    Confirm Password
+                </label>
+                <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
+                       placeholder="Confirm your password" required>
+            </div>
+            
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-user-plus me-1"></i>
+                    Create Account
+                </button>
+            </div>
+        </form>
+        
+        <hr class="my-4">
+        
+        <div class="text-center">
+            <p class="text-muted mb-0">Already have an account?</p>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-primary mt-2">
+                <i class="fas fa-sign-in-alt me-1"></i>
+                Sign In
+            </a>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+// Password confirmation validation
+document.getElementById('confirm_password').addEventListener('input', function() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = this.value;
+    
+    if (password !== confirmPassword) {
+        this.setCustomValidity('Passwords do not match');
+    } else {
+        this.setCustomValidity('');
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}
