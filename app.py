@@ -13,13 +13,14 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-i
 # Database configuration - simplified for Vercel
 database_url = os.environ.get('DATABASE_URL')
 if database_url:
-    # Handle PostgreSQL URL format
+    # Supabase/Postgres connection fix
     if database_url.startswith('postgres://'):
         database_url = database_url.replace('postgres://', 'postgresql://', 1)
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 else:
-    # Local development
+    # Local development fallback
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todo.db'
+
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
