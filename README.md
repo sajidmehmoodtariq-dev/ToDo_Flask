@@ -21,17 +21,20 @@ A modern, responsive Todo List application built with Flask featuring **complete
 ### Local Development
 
 1. **Clone the repository**
+
    ```bash
    git clone <your-repo-url>
    cd ToDo_Flask
    ```
 
 2. **Install dependencies**
+
    ```bash
    pip install -r requirements.txt
    ```
 
 3. **Run the application**
+
    ```bash
    python app.py
    ```
@@ -73,6 +76,7 @@ DATABASE_URL=postgresql://user:pass@host:port/dbname
 ```
 
 For production:
+
 - **Vercel**: Add variables in Vercel dashboard
 - **Railway**: DATABASE_URL is automatically provided
 
@@ -103,6 +107,7 @@ ToDo_Flask/
 ## 🔧 API Endpoints
 
 ### Authentication Routes
+
 - `GET /register` - User registration page
 - `POST /register` - Create new user account
 - `GET /login` - User login page
@@ -110,6 +115,7 @@ ToDo_Flask/
 - `GET /logout` - Logout current user
 
 ### Todo Management Routes (Authentication Required)
+
 - `GET /` - Home page with user's todo list
 - `POST /add` - Add new todo
 - `GET /complete/<id>` - Toggle todo completion
@@ -134,6 +140,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🆘 Need Help?
 
 If you encounter any issues:
+
 1. Check the environment variables are set correctly
 2. Ensure the database connection is working
 3. Check the Vercel and Railway logs for errors
